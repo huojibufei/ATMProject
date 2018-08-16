@@ -5,21 +5,28 @@ user_logger = common.get_logger('user')
 
 #注册接口
 def register_interface(name,password,balance = 15000):
-    user_dic = {'name': name, 'password': password, 'balance': balance, 'credit': balance, 'locked': False,
-                'bankflow': [], 'shoppingcart': {}}
-    db_handler.save(user_dic)
-    user_logger.info('%s注册了' %name)
-    return True,'注册成功!'
+    user_dic = db_handler.select(name)
+    if not user_dic:
+        user_dic = {'name': name, 'password': password, 'balance': balance, 'credit': balance, 'locked': False,
+                    'bankflow': [], 'shoppingcart': {}}
+        db_handler.save(user_dic)
+        user_logger.info('%s注册了' %name)
+        return True,'注册成功!'
+    else:
+        return False,'用户已存在!'
 
 
 # 登录接口
 def login_interface(name,password):
     user_dic = db_handler.select(name)
-    if user_dic['password'] == password:
-        user_logger.info('%s登录了' % name)
-        return True,'登陆成功!'
+    if user_dic:
+        if user_dic['password'] == password:
+            user_logger.info('%s登录了' % name)
+            return True,'登陆成功!'
+        else:
+            return False,'密码错误或已被锁定!'
     else:
-        return False,'密码错误或已被锁定!'
+        return False,'该用户未注册!'
 
 
 # 锁定用户接口

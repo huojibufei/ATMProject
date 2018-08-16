@@ -16,22 +16,17 @@ def login():
     while True:
         name = input('请输入用户名(输入q退出):').strip()
         if name == 'q': break
-        user_dic = db_handler.select(name)
-        if user_dic:
-            password = input('请输入密码:').strip()
-            flag, msg = user.login_interface(name, password)
-            if flag:
-                print(msg)
-                user_info['name'] = name
-                break
-            else:
-                print(msg)
-                count += 1
-                if count >= 3:
-                    print(user.lock_user(name))
-
+        password = input('请输入密码:').strip()
+        flag, msg = user.login_interface(name, password)
+        if flag:
+            print(msg)
+            user_info['name'] = name
+            break
         else:
-            print('该用户还未注册,请前往注册!')
+            print(msg)
+            count += 1
+            if count >= 3:
+                print(user.lock_user(name))
 
 
 def register():
@@ -42,18 +37,16 @@ def register():
     while True:
         name = input('请输入用户名(输入q退出):').strip()
         if name == 'q': break
-        user_dic = db_handler.select(name)
-        if not user_dic:
-            password = input('请输入密码:').strip()
-            password1 = input('请确认密码:').strip()
-            if password == password1:
-                flag, msg = user.register_interface(name, password)
-                if flag:
-                    print(msg)
-                    user_info['name'] = name
-                    break
-        else:
-            print('该用户已注册,请登录!')
+        password = input('请输入密码:').strip()
+        password1 = input('请确认密码:').strip()
+        if password == password1:
+            flag, msg = user.register_interface(name, password)
+            if flag:
+                print(msg)
+                user_info['name'] = name
+                break
+            else:
+                print(msg)
 
 
 @common.auth
