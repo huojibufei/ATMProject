@@ -2,6 +2,7 @@ from core import src
 import logging.config
 from conf import settings
 
+
 def auth(func):
     def inner(*args,**kwargs):
         if src.user_info['name']:
@@ -14,7 +15,5 @@ def auth(func):
 
 def get_logger(name):
     logging.config.dictConfig(settings.LOGGING_DIC)
-    logger = logging.getLogger(name)
-    return logger
-
-
+    my_logger = logging.getLogger(name)
+    return my_logger
